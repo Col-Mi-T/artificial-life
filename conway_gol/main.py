@@ -1,12 +1,12 @@
-import grid
-import pygame
 import sys
 sys.dont_write_bytecode = True
+import games.grid as grid
+import pygame
 pygame.init()
 
-screen = pygame.display.set_mode((800, 600))
 
 clock = pygame.time.Clock()
+
 
 running = True
 life = grid.life
@@ -17,13 +17,24 @@ WIDTH = len(life[0])
 
 CELL_SIZE = 20
 
+screen = pygame.display.set_mode((
+    WIDTH * CELL_SIZE,
+    HEIGHT * CELL_SIZE + 50
+))
+font = pygame.font.SysFont("Arial", 24)
+
+generation = 0
 while running:
+    generation += 1
+    population = 0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
     screen.fill((20,20,20))
 
+    
+    
     # Create a fresh generation
     gen = [[0 for cell in row] for row in life]
 
@@ -50,39 +61,33 @@ while running:
 
     for y, row in enumerate(life):
         for x, cell in enumerate(row):
+            if cell == 1:
+                population += 1
             neighbours = 0
 
             # Top-left
-            if y > 0 and x > 0:
-                neighbours += life[y-1][x-1]
+            neighbours += life[(y-1) % HEIGHT][(x-1) % WIDTH]
 
             # Top
-            if y > 0:
-                neighbours += life[y-1][x]
+            neighbours += life[(y-1) % HEIGHT][x]
 
             # Top-right
-            if y > 0 and x < WIDTH-1:
-                neighbours += life[y-1][x+1]
+            neighbours += life[(y-1) % HEIGHT][(x+1) % WIDTH]
 
             # Left
-            if x > 0:
-                neighbours += life[y][x-1]
+            neighbours += life[y][(x-1) % WIDTH]
 
             # Right
-            if x < WIDTH-1:
-                neighbours += life[y][x+1]
+            neighbours += life[y][(x+1) % WIDTH]
 
             # Bottom-left
-            if y < HEIGHT-1 and x > 0:
-                neighbours += life[y+1][x-1]
+            neighbours += life[(y+1) % HEIGHT][(x-1) % WIDTH]
 
             # Bottom
-            if y < HEIGHT-1:
-                neighbours += life[y+1][x]
+            neighbours += life[(y+1) % HEIGHT][x]
 
             # Bottom-right
-            if y < HEIGHT-1 and x < WIDTH-1:
-                neighbours += life[y+1][x+1]
+            neighbours += life[(y+1) % HEIGHT][(x+1) % WIDTH]
 
             # 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
             if neighbours < 2 and cell == 1:
@@ -141,7 +146,10 @@ while running:
                 1
             )
 
+    
+    text = font.render(f"Generation:{generation} Population:{population}", True, (255, 0, 0))
+    screen.blit(text, (10,HEIGHT*CELL_SIZE+10))
     pygame.display.flip()
-    clock.tick(3)
+    clock.tick(10)
 
 pygame.quit()
