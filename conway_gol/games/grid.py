@@ -1,7 +1,5 @@
-import sys
-sys.dont_write_bytecode = True
-from games.simkin import simkin_glider_gun
-from games.gosper import gosper_glider_gun 
+from conway_gol.games.simkin import simkin_glider_gun
+from conway_gol.games.gosper import gosper_glider_gun 
 
 life = [
     
