@@ -98,8 +98,7 @@ def seeds():
 
                 # Bottom-right
                 neighbours += life[(y+1) % HEIGHT][(x+1) % WIDTH]
-
-                if neighbours == 2 and cell == 0
+                if neighbours == 2 and cell == 0:
                 #if neighbours >= 2 and neighbours<=4 and cell == 0: # My personal variation of this... seems more explosive
                     gen[y][x] = 1
                 
