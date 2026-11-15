@@ -3,7 +3,6 @@ sys.dont_write_bytecode = True
 
 
 def options():
-    import sys
     import questionary
     choice = questionary.select(
         "What would you like to do?",
