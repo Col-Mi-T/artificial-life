@@ -35,7 +35,7 @@ def seeds():
 
         
         
-        # Create a fresh generation
+        
         gen = [[0 for cell in row] for row in life]
 
         """
