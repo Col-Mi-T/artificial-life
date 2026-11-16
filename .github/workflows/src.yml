@@ -1,0 +1,33 @@
+
+name: Source Archive
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create source archive
+        run: |
+          git archive \
+            --format=zip \
+            --prefix=artificial-life/ \
+            HEAD \
+            -o artificial-life-source.zip
+
+      - name: Upload source archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: artificial-life-source-${{ github.sha }}
+          path: artificial-life-source.zip
+          retention-days: 30
