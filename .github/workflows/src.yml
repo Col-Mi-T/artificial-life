@@ -1,5 +1,5 @@
 
-name: Source Archive
+name: Source Release
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
       - '**'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  archive:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,9 +25,18 @@ jobs:
             HEAD \
             -o artificial-life-source.zip
 
-      - name: Upload source archive
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: artificial-life-source-${{ github.sha }}
-          path: artificial-life-source.zip
-          retention-days: 30
+          tag_name: source-${{ github.run_id }}-${{ github.run_attempt }}
+          name: Source Release - ${{ github.sha }}
+          body: |
+            Automated source release.
+
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref_name }}
+
+            Contains the project source files only.
+          target_commitish: ${{ github.sha }}
+          prerelease: true
+          files: artificial-life-source.zip
