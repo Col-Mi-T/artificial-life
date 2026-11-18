@@ -20,15 +20,15 @@ jobs:
         include:
           - os: windows-latest
             platform: windows
-            executable: track.exe
+            executable: life.exe
 
           - os: ubuntu-22.04
             platform: linux
-            executable: track
+            executable: life
 
           - os: macos-latest
             platform: macos
-            executable: track
+            executable: life
 
     steps:
       - name: Checkout repository
@@ -68,7 +68,7 @@ jobs:
           if not executable.is_file():
               raise FileNotFoundError(f"Executable not found: {executable}")
 
-          archive = output_dir / f"track-{os.environ['PLATFORM']}.zip"
+          archive = output_dir / f"life-{os.environ['PLATFORM']}.zip"
 
           with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as zip_file:
               zip_file.write(executable, executable.name)
@@ -84,8 +84,8 @@ jobs:
       - name: Upload packaged executable
         uses: actions/upload-artifact@v7
         with:
-          name: track-${{ matrix.platform }}
-          path: packages/track-${{ matrix.platform }}.zip
+          name: life-${{ matrix.platform }}
+          path: packages/life-${{ matrix.platform }}.zip
           if-no-files-found: error
 
   release:
@@ -107,13 +107,13 @@ jobs:
         run: |
           mkdir -p release-assets
           git archive --format=zip \
-            --output=release-assets/track-source.zip HEAD
+            --output=release-assets/life-source.zip HEAD
 
       - name: Publish release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
-          name: Track ${{ github.ref_name }}
+          name: Life ${{ github.ref_name }}
           generate_release_notes: true
           files: release-assets/*.zip
           fail_on_unmatched_files: true
